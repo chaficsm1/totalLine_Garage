@@ -525,26 +525,7 @@
     </div>
   </div>
 
-  // Format cost fields as US currency
-document.addEventListener("input", (e) => {
-  if (e.target.classList.contains("rec-cost")) {
-    let raw = e.target.value.replace(/[^0-9.]/g, "");
-
-    if (raw === "") {
-      e.target.value = "";
-      return;
-    }
-
-    let num = parseFloat(raw);
-    if (!isNaN(num)) {
-      e.target.value = num.toLocaleString("en-US", {
-        style: "currency",
-        currency: "USD"
-      });
-    }
-  }
-});
-
+  
   <button id="addRecBtn" class="add-row-btn">+ Add Recommendation</button>
 </div>
 
@@ -1021,6 +1002,48 @@ document.getElementById("emailBtn").addEventListener("click", async () => {
 
   openPrefilledEmail(pdfName);
 });
+
+// Format cost fields as US currency + update total
+document.addEventListener("input", (e) => {
+    if (e.target.classList.contains("rec-cost")) {
+
+        // Strip non-numeric characters
+        let raw = e.target.value.replace(/[^0-9.]/g, "");
+
+        if (raw === "") {
+            e.target.value = "";
+            updateRecTotal();
+            return;
+        }
+
+        let num = parseFloat(raw);
+        if (!isNaN(num)) {
+            e.target.value = num.toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD"
+            });
+        }
+
+        updateRecTotal();
+    }
+});
+
+// Calculate total cost
+function updateRecTotal() {
+    let total = 0;
+
+    document.querySelectorAll(".rec-cost").forEach(input => {
+        let raw = input.value.replace(/[^0-9.]/g, "");
+        let num = parseFloat(raw);
+        if (!isNaN(num)) total += num;
+    });
+
+    document.getElementById("recTotal").value =
+        total.toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD"
+        });
+}
 
 /* -----------------------------------------------------------
    INITIALIZE APP
