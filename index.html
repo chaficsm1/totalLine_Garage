@@ -525,6 +525,26 @@
     </div>
   </div>
 
+  // Format cost fields as US currency
+document.addEventListener("input", (e) => {
+  if (e.target.classList.contains("rec-cost")) {
+    let raw = e.target.value.replace(/[^0-9.]/g, "");
+
+    if (raw === "") {
+      e.target.value = "";
+      return;
+    }
+
+    let num = parseFloat(raw);
+    if (!isNaN(num)) {
+      e.target.value = num.toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD"
+      });
+    }
+  }
+});
+
   <button id="addRecBtn" class="add-row-btn">+ Add Recommendation</button>
 </div>
 
